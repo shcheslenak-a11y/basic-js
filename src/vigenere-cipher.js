@@ -20,14 +20,43 @@ const { NotImplementedError } = require('../lib');
  *
  */
 class VigenereCipheringMachine {
-  encrypt() {
-    // Remove line below and write your code here
-    throw new NotImplementedError('Not implemented');
+  constructor (reverse=false) {
+    this.reverse = reverse
+  }
+  encrypt(str, key) {
+    if (!str || !key) throw Error('Incorrect arguments!')
+    str = str.toUpperCase()
+    key = key.toUpperCase()
+    let newStr = [];
+    let keyIndex = 0;
+    for (let i in str) {
+      let char = 0
+      if (str.charCodeAt(i) >= 65 && str.charCodeAt(i) <= 90){
+        char = (str.charCodeAt(i) + key.charCodeAt(keyIndex) - 130) % 26 + 65
+        keyIndex = (keyIndex + 1) % key.length
+      } else char = str.charCodeAt(i)
+      newStr.push(char)
+    }
+    if (this.reverse) newStr=newStr.reverse()
+    return String.fromCharCode(...newStr)
   }
 
-  decrypt() {
-    // Remove line below and write your code here
-    throw new NotImplementedError('Not implemented');
+  decrypt(str, key) {
+    if (!str || !key) throw Error('Incorrect arguments!')
+    str = str.toUpperCase()
+    key = key.toUpperCase()
+    let newStr = [];
+    let keyIndex = 0;
+    for (let i in str) {
+      let char = 0
+      if (str.charCodeAt(i) >= 65 && str.charCodeAt(i) <= 90){
+        char = (str.charCodeAt(i) - key.charCodeAt(keyIndex)+26) % 26 + 65
+        keyIndex = (keyIndex + 1) % key.length
+      } else char = str.charCodeAt(i)
+      newStr.push(char)
+    }
+    if (this.reverse) newStr=newStr.reverse()
+    return String.fromCharCode(...newStr)
   }
 }
 
@@ -36,3 +65,6 @@ module.exports = {
   reverseMachine: new VigenereCipheringMachine(false),
   VigenereCipheringMachine,
 };
+
+const m = new VigenereCipheringMachine(true)
+console.log(m.decrypt('AEIHQX SX DLLU!', 'alphonse'))
